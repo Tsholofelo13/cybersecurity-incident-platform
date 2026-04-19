@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="logo">
+    <i class="fas fa-shield-alt"></i>
+    <span>CyberShield Security</span>
+  </div>
+  
+  <div class="nav-links">
+    <a routerLink="/dashboard" routerLinkActive="active">
+      <i class="fas fa-chart-line"></i> Dashboard
+    </a>
+    <a routerLink="/incidents" routerLinkActive="active">
+      <i class="fas fa-exclamation-triangle"></i> Incidents
+    </a>
+    <a routerLink="/analytics" routerLinkActive="active">
+      <i class="fas fa-brain"></i> Analytics
+    </a>
+    <a routerLink="/settings" routerLinkActive="active">
+      <i class="fas fa-cog"></i> Settings
+    </a>
+    <a routerLink="/users" routerLinkActive="active" *ngIf="user?.role === 'ADMIN'">
+      <i class="fas fa-users"></i> Users
+    </a>
+    <a routerLink="/contact" routerLinkActive="active">
+      <i class="fas fa-envelope"></i> Contact
+    </a>
+    <a routerLink="/about" routerLinkActive="active">
+      <i class="fas fa-info-circle"></i> About
+    </a>
+  </div>
+  
+  <div class="user-section" *ngIf="user">
+    <div class="user-avatar">
+      <i class="fas fa-user-circle"></i>
+    </div>
+    <div class="user-info">
+      <span class="user-name">{{ user?.fullName || user?.username }}</span>
+      <span class="user-role" [ngClass]="user?.role">{{ user?.role }}</span>
+    </div>
+    <button class="logout-btn" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</nav>
