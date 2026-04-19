@@ -1,59 +1,221 @@
-# CybersecurityClean
+# 🛡️ CyberShield Security - Cybersecurity Incident Intelligence Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+## 📋 Project Overview
 
-## Development server
+CyberShield Security is a **full-stack cybersecurity incident management system** that helps organizations track, analyze, and predict security incidents. The platform provides real-time incident monitoring, AI-powered predictive analytics, and role-based access control.
 
-To start a local development server, run:
+## 🎯 Key Features
 
-```bash
-ng serve
-```
+- 🔐 **JWT Authentication** - Secure login with token-based authentication
+- 👥 **Role-Based Access** - Three roles: ADMIN, ANALYST, VIEWER
+- 📊 **Interactive Dashboard** - Real-time statistics and data visualizations
+- 📝 **Incident Management** - Complete CRUD operations for security incidents
+- 🤖 **AI Analytics** - Machine learning predictions for incident patterns
+- 📈 **Dynamic Charts** - Interactive charts using Chart.js
+- 👤 **User Management** - Admin interface to manage users and roles
+- 🌙 **Dark Mode** - Toggle between light and dark themes
+- 📁 **CSV Export** - Export incident data to CSV format
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🏗️ Technology Stack
 
-## Code scaffolding
+### Frontend
+- Angular 21
+- Chart.js
+- Font Awesome 6
+- TypeScript
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Backend
+- Spring Boot 3.1.5
+- Spring Security with JWT
+- MySQL 8.0
+- Hibernate/JPA
+- Lombok
 
-```bash
-ng generate component component-name
-```
+### AI/ML
+- PyTorch for predictive analytics
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📊 Database Schema
 
-```bash
-ng generate --help
-```
+### Users Table
 
-## Building
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    full_name VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-To build the project run:
 
-```bash
-ng build
-```
+### Incidents Table
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+CREATE TABLE incidents (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    severity VARCHAR(20) NOT NULL,
+    incident_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'OPEN',
+    source_ip VARCHAR(45),
+    destination_ip VARCHAR(45),
+    affected_systems TEXT,
+    reported_by BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP NULL,
+    FOREIGN KEY (reported_by) REFERENCES users(id)
+);
 
-## Running unit tests
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 🚀 Installation Guide
 
-```bash
-ng test
-```
+### Prerequisites
+- Node.js 18+ 
+- Java 17+
+- MySQL 8.0+
+- Angular CLI
+- Maven
 
-## Running end-to-end tests
+### Backend Setup
 
-For end-to-end (e2e) testing, run:
+1. **Navigate to backend folder**
 
-```bash
-ng e2e
-```
+cd backend
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
+2. **Configure MySQL database**
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+CREATE DATABASE cybersecurity_db;
+USE cybersecurity_db;
+-- Run the schema above
+
+
+3. **Update application.properties**
+
+spring.datasource.url=jdbc:mysql://localhost:3306/cybersecurity_db
+spring.datasource.username=root
+spring.datasource.password=yourpassword
+jwt.secret=your-secret-key
+jwt.expiration=86400000
+
+
+4. **Run the backend**
+
+mvn clean install
+mvn spring-boot:run
+
+
+### Frontend Setup
+
+1. **Navigate to frontend folder**
+cd frontend
+
+2. **Install dependencies**
+npm install
+
+3. **Run the development server**
+ng serve --port 4200
+
+4. **Open your browser**
+http://localhost:4200
+
+
+## 🔑 Default Users
+
+| Username | Password | Role | Permissions |
+|----------|----------|------|-------------|
+| admin | admin123 | ADMIN | Full access (CRUD, User Management) |
+| analyst | analyst123 | ANALYST | Create, Read, Update (no delete) |
+| viewer | viewer123 | VIEWER | Read-only access |
+
+## 📡 API Endpoints
+
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/login` | User login |
+| POST | `/api/auth/register` | User registration |
+
+### Incidents
+| Method | Endpoint | Description | Required Role |
+|--------|----------|-------------|---------------|
+| GET | `/api/incidents` | Get all incidents | Any |
+| GET | `/api/incidents/{id}` | Get incident by ID | Any |
+| POST | `/api/incidents` | Create new incident | ADMIN/ANALYST |
+| PUT | `/api/incidents/{id}` | Update incident | ADMIN/ANALYST |
+| DELETE | `/api/incidents/{id}` | Delete incident | ADMIN |
+
+### Admin (Admin only)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/users` | Get all users |
+| PUT | `/api/admin/users/{id}/role` | Update user role |
+| DELETE | `/api/admin/users/{id}` | Delete user |
+
+### Analytics
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/analytics/stats` | Get incident statistics |
+| GET | `/api/analytics/predict` | AI incident prediction |
+
+## 🎯 Role-Based Permissions
+
+| Action | ADMIN | ANALYST | VIEWER |
+|--------|-------|---------|--------|
+| View incidents | ✅ | ✅ | ✅ |
+| Create incidents | ✅ | ✅ | ❌ |
+| Edit incidents | ✅ | ✅ | ❌ |
+| Delete incidents | ✅ | ❌ | ❌ |
+| View analytics | ✅ | ✅ | ✅ |
+| Manage users | ✅ | ❌ | ❌ |
+| Export data | ✅ | ✅ | ❌ |
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Port 8081 already in use**
+
+netstat -ano | findstr :8081
+taskkill /PID <PID> /F
+
+
+**MySQL connection error**
+- Ensure MySQL service is running
+- Check credentials in application.properties
+- Verify database exists
+
+**JWT token expired**
+- Login again to get a new token
+- Token expires after 24 hours
+
+## 📸 Screenshots
+
+
+
+- Login Page
+- Dashboard with stats
+- Incidents management
+- Analytics with charts
+- User management (Admin)
+- Dark mode
+
+## 👨‍💻 Author
+
+**Tsholofelo Sekome**
+- GitHub: [@Tsholofelo13](https://github.com/Tsholofelo13)
+
+## 🙏 Acknowledgments
+
+- Sefako Makgatho Health Sciences University
+- CSIT701 Advanced Database Systems Lecturer: Taurai Hungwe
+
+## 📝 License
+
+This project is for educational purposes as part of the CSIT701 Advanced Database Systems assessment.
+
+---
+
+**Built with ❤️ for cybersecurity awareness**
+
